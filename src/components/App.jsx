@@ -16,23 +16,22 @@ export class App extends Component {
         {
           contact,
           id: nanoid(),
+          number: number,
         },
       ],
-      number: number,
     }));
   };
 
   render() {
-    const { contacts, number } = this.state;
+    const { contacts } = this.state;
     console.log(contacts);
-    console.log(number);
     return (
       <>
         <Form onSubmit={this.addNewContact} />
         <ul>
           {contacts.map(item => (
             <li key={item.id}>
-              {item.contact}: {number}
+              {item.contact}: {item.number}
             </li>
           ))}
         </ul>
