@@ -4,6 +4,7 @@ import css from './Form.module.css';
 export class Form extends Component {
   state = {
     name: '',
+    number: '',
   };
 
   handleInputChange = e => {
@@ -11,18 +12,24 @@ export class Form extends Component {
     this.setState({ name: value });
   };
 
+  handleInputNumberChange = e => {
+    const nr = e.target.value;
+    this.setState({ number: nr });
+  };
+
   handleSubmit = e => {
     e.preventDefault();
     const name = this.state.name;
+    const number = this.state.number;
 
-    this.props.onSubmit(name);
+    this.props.onSubmit(name, number);
 
     // resetujemy dane
-    // this.setState({ name: '' });
+    this.setState({ name: '', number: '' });
   };
 
   render() {
-    const { name } = this.state;
+    const { name, number } = this.state;
     return (
       <form onSubmit={this.handleSubmit} className={css.form}>
         <label>
@@ -35,6 +42,18 @@ export class Form extends Component {
             required
             value={name}
             onChange={this.handleInputChange}
+          />
+        </label>
+        <label>
+          Number
+          <input
+            type="tel"
+            name="number"
+            pattern="\+?\d{1,4}?[-.\s]?\(?\d{1,3}?\)?[-.\s]?\d{1,4}[-.\s]?\d{1,4}[-.\s]?\d{1,9}"
+            title="Phone number must be digits and can contain spaces, dashes, parentheses and can start with +"
+            required
+            value={number}
+            onChange={this.handleInputNumberChange}
           />
         </label>
         <button type="submit">Add contact</button>
