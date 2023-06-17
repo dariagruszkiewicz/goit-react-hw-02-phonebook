@@ -24,7 +24,7 @@ export class ContactForm extends Component {
 
     this.props.onSubmit(name, number);
 
-    // resetujemy dane
+    // reset danych
     this.setState({ name: '', number: '' });
   };
 
