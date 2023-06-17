@@ -1,6 +1,8 @@
 import { Component } from 'react';
 import { nanoid } from 'nanoid';
-import { Form } from './Form/Form';
+import { ContactForm } from './ContactForm/ContactForm';
+import { Filter } from './Filter/Filter';
+import { ContactList } from './ContactList/ContactList';
 
 export class App extends Component {
   state = {
@@ -11,59 +13,50 @@ export class App extends Component {
       { id: 'id-4', contact: 'Annie Copeland', number: '227-91-26' },
     ],
     filter: '',
-    name: '',
-    number: '',
   };
 
   addNewContact = (contact, number) => {
-    this.setState(prevState => ({
-      contacts: [
-        ...prevState.contacts,
-        {
-          contact,
-          id: nanoid(),
-          number: number,
-        },
-      ],
-    }));
+    const name = this.state.contacts.map(item => item.contact);
+    if (name.includes(contact)) {
+      alert(`${contact} is alredy in contacts.`);
+    } else {
+      this.setState(prevState => ({
+        contacts: [
+          ...prevState.contacts,
+          {
+            contact,
+            id: nanoid(),
+            number: number,
+          },
+        ],
+      }));
+    }
   };
 
-  inputFilter = e => {
-    const contacts = this.state.contacts;
-    const value = e.target.value;
-    const names = contacts.map(item => item.contact);
-    this.setState({ filter: value });
-    console.log(value);
-    const filtredNames = names.filter(item =>
-      item.toLowerCase().includes(value.toLowerCase())
+  filtredContacts = () => {
+    const { contacts, filter } = this.state;
+    const filtredNames = contacts.filter(item =>
+      item.contact.toLowerCase().includes(filter.toLowerCase())
     );
-    console.log(filtredNames);
+    return filtredNames;
+  };
+
+  inputFilterChange = e => {
+    const value = e.target.value;
+    this.setState({ filter: value });
   };
 
   render() {
-    const { contacts, filter } = this.state;
-    console.log(contacts);
+    const { filter } = this.state;
+    const filteredContacts = this.filtredContacts();
+
     return (
       <>
         <h1>Phonebooks</h1>
-        <Form onSubmit={this.addNewContact} />
+        <ContactForm onSubmit={this.addNewContact} />
         <h2>Contacts</h2>
-        <label>
-          Find contacts by name
-          <input
-            type="text"
-            name="filter"
-            value={filter}
-            onChange={this.inputFilter}
-          />
-        </label>
-        <ul>
-          {contacts.map(item => (
-            <li key={item.id}>
-              {item.contact}: {item.number}
-            </li>
-          ))}
-        </ul>
+        <Filter value={filter} onChange={this.inputFilterChange} />
+        <ContactList contacts={filteredContacts} />
       </>
     );
   }
